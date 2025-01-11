@@ -4,7 +4,8 @@ import { google } from 'googleapis';
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const oauth2Client = new google.auth.OAuth2(
     process.env.GOOGLE_CLIENT_ID,
-   process.env.GOOGLE_CLIENT_SECRET
+   process.env.GOOGLE_CLIENT_SECRET,
+   'http://localhost:3000/api/auth/demo' 
   );
 
   const { code } = req.query;
@@ -13,6 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { tokens } = await oauth2Client.getToken(code as string);
     oauth2Client.setCredentials(tokens);
     console.log("token",tokens);
+    res.redirect(`/listpage?token=${tokens.access_token}`);
     
     res.status(200).json(tokens);
   } else {
