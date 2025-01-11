@@ -57,7 +57,7 @@ const Playlists = () => {
       }
       localStorage.setItem('accessToken', accessToken);
       try {
-        const response = await axios.get('http://localhost:3000/api/getPlaylist', {
+        const response = await axios.get('https://you-tube-play-list-fetcher-6gyq.vercel.app/api/getPlaylist', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         setPlaylists(response.data.items || []); // Ensure to set an empty array if no items
@@ -75,7 +75,7 @@ const Playlists = () => {
     if (selectedPlaylistId) {
       const fetchPlaylistVideos = async () => {
         try {
-          const response = await axios.get(`http://localhost:3000/api/getPlaylistItem?playlistId=${selectedPlaylistId}`, {
+          const response = await axios.get(`https://you-tube-play-list-fetcher-6gyq.vercel.app/api/getPlaylistItem?playlistId=${selectedPlaylistId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
           });
           setVideos(response.data.items || []); // Ensure videos is set to an empty array if no items
