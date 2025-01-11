@@ -14,10 +14,11 @@ type Video = {
     };
 };
 
-const PlaylistVideos = ({ videos }: { videos:  Video[]}) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-      {videos.map((video) => (
-        <div 
+const PlaylistVideos = ({ videos }: { videos: Video[] }) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+    {videos?.length > 0 ? (
+      videos?.map((video) => (
+        <div
           key={video.id}
           className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300"
         >
@@ -36,14 +37,14 @@ const PlaylistVideos = ({ videos }: { videos:  Video[]}) => (
               {video.snippet.title}
             </h3>
             <div className="flex items-center justify-between text-sm text-gray-500">
-              {/* <span>{video.statistics.viewCount} views</span> */}
               <span>{new Date(video.snippet.publishedAt).toLocaleDateString()}</span>
             </div>
           </div>
         </div>
-      ))}
-    </div>
-  );
-  
-  export default PlaylistVideos;
-  
+      ))
+    ) : (
+      <p>No videos available</p>
+    )}
+  </div>
+);
+ export default PlaylistVideos
