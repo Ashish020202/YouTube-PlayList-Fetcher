@@ -46,6 +46,8 @@ const Playlists = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
   const [videos, setVideos] = useState<Videos[]>([]);
+  const [loadingPlaylists, setLoadingPlaylists] = useState<boolean>(true);
+  const [loadingVideos, setLoadingVideos] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -57,6 +59,7 @@ const Playlists = () => {
       }
       localStorage.setItem('accessToken', accessToken);
       try {
+        setLoadingPlaylists(true);
         const response = await axios.get('https://you-tube-play-list-fetcher-6gyq.vercel.app/api/getPlaylist', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
@@ -66,6 +69,8 @@ const Playlists = () => {
         }
       } catch (error) {
         console.error("Error fetching playlists:", error);
+      }finally {
+        setLoadingPlaylists(false);
       }
     };
     fetchPlaylists();
@@ -75,12 +80,15 @@ const Playlists = () => {
     if (selectedPlaylistId) {
       const fetchPlaylistVideos = async () => {
         try {
+          setLoadingVideos(true);
           const response = await axios.get(`https://you-tube-play-list-fetcher-6gyq.vercel.app/api/getPlaylistItem?playlistId=${selectedPlaylistId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
           });
           setVideos(response.data.items || []); // Ensure videos is set to an empty array if no items
         } catch (error) {
           console.error("Error fetching playlist videos:", error);
+        }finally {
+          setLoadingVideos(false);
         }
       };
       fetchPlaylistVideos();
@@ -88,11 +96,14 @@ const Playlists = () => {
   }, [selectedPlaylistId]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 p-4">
       <Navbar />
       <div className="container mx-auto px-4 pt-20 cursor-pointer">
         <div className="mb-12 border-r-black border-r-2 border">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Featured Playlist</h1>
+          {loadingPlaylists ? (
+            <div className="text-center text-gray-500">Loading playlists...</div>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {playlists && playlists?.length > 0 ? playlists?.map((playlist) => (
               <div
@@ -152,18 +163,18 @@ const Playlists = () => {
               <div>No playlists available.</div>
             )}
           </div>
+            )}
         </div>
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Playlist Videos</h2>
-          {videos && videos.length > 0 ? (
-            <PlaylistVideos videos={videos} />
+          {loadingVideos ? (
+            <div className="text-center text-gray-500">Loading videos...</div>
           ) : (
-            <div>No videos available in this playlist.</div>
+            <PlaylistVideos videos={videos} />
           )}
         </div>
       </div>
     </div>
   );
 };
-
 export default Playlists;
