@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Play, Video, Eye} from 'lucide-react';
+import { Calendar, Play, Video, Eye } from 'lucide-react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import PlaylistVideos from './playlistVideo';
@@ -42,12 +42,10 @@ type Video = {
   };
 };
 
-
-
 const Playlists = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
-  const [videos, setVideos] = useState<Video[]>([]);  
+  const [videos, setVideos] = useState<Video[]>([]);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -62,8 +60,8 @@ const Playlists = () => {
         const response = await axios.get('http://localhost:3000/api/getPlaylist', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
-        setPlaylists(response.data.items);
-        if (response.data.items.length > 0) {
+        setPlaylists(response.data.items || []); // Ensure to set an empty array if no items
+        if (response.data.items?.length > 0) {
           setSelectedPlaylistId(response.data.items[0].id);  
         }
       } catch (error) {
@@ -80,7 +78,7 @@ const Playlists = () => {
           const response = await axios.get(`http://localhost:3000/api/getPlaylistItem?playlistId=${selectedPlaylistId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
           });
-          setVideos(response.data.items);
+          setVideos(response.data.items || []); // Ensure videos is set to an empty array if no items
         } catch (error) {
           console.error("Error fetching playlist videos:", error);
         }
@@ -92,20 +90,17 @@ const Playlists = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <div className="container mx-auto px-4 pt-20">
-       
-        <div className="mb-12">
+      <div className="container mx-auto px-4 pt-20 cursor-pointer">
+        <div className="mb-12 border-r-black border-r-2 border">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Featured Playlist</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {playlists.map((playlist) => (
-              <div 
-                key={playlist.id} 
+            {playlists && playlists.length > 0 ? playlists.map((playlist) => (
+              <div
+                key={playlist.id}
                 className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
                 onClick={() => setSelectedPlaylistId(playlist.id)}
               >
-               
                 <div className="flex md:flex-row flex-col h-full">
-                  
                   <div className="relative md:w-2/5 w-full">
                     <img
                       src={playlist.snippet.thumbnails.medium.url}
@@ -119,8 +114,6 @@ const Playlists = () => {
                       </div>
                     </div>
                   </div>
-
-                  
                   <div className="md:w-3/5 p-6 flex flex-col justify-between">
                     <div>
                       <h2 className="text-xl font-bold text-gray-800 mb-3 group-hover:text-purple-600 transition-colors duration-300">
@@ -155,12 +148,18 @@ const Playlists = () => {
                   </div>
                 </div>
               </div>
-            ))}
+            )) : (
+              <div>No playlists available.</div>
+            )}
           </div>
         </div>
         <div className="mb-12">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Playlist Videos</h2>
-          <PlaylistVideos videos={videos} />
+          {videos && videos.length > 0 ? (
+            <PlaylistVideos videos={videos} />
+          ) : (
+            <div>No videos available in this playlist.</div>
+          )}
         </div>
       </div>
     </div>
