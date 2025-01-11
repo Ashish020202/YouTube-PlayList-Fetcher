@@ -26,7 +26,7 @@ type Playlist = {
   };
 };
 
-type Video = {
+type Videos = {
   id: string;
   snippet: {
     title: string;
@@ -45,7 +45,7 @@ type Video = {
 const Playlists = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [videos, setVideos] = useState<Videos[]>([]);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
