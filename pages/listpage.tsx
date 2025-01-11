@@ -94,7 +94,7 @@ const Playlists = () => {
         <div className="mb-12 border-r-black border-r-2 border">
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Featured Playlist</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {playlists && playlists.length > 0 ? playlists.map((playlist) => (
+            {playlists && playlists?.length > 0 ? playlists?.map((playlist) => (
               <div
                 key={playlist.id}
                 className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
