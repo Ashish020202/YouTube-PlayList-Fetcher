@@ -1,4 +1,20 @@
-const PlaylistVideos = ({ videos }: { videos: any[] }) => (
+type Video = {
+    id: string;
+    snippet: {
+      title: string;
+      publishedAt: string;
+      thumbnails: {
+        medium: {
+          url: string;
+        };
+      };
+    };
+    contentDetails: {
+      duration: string;
+    };
+};
+
+const PlaylistVideos = ({ videos }: { videos:  Video[]}) => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
       {videos.map((video) => (
         <div 

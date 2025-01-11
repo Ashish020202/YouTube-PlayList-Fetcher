@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, Play, Video, Eye, Menu, Search, Bell, User, Youtube } from 'lucide-react';
+import { Calendar, Play, Video, Eye} from 'lucide-react';
 import axios from 'axios';
 import Navbar from './Navbar';
 import PlaylistVideos from './playlistVideo';
@@ -26,12 +26,28 @@ type Playlist = {
   };
 };
 
+type Video = {
+  id: string;
+  snippet: {
+    title: string;
+    publishedAt: string;
+    thumbnails: {
+      medium: {
+        url: string;
+      };
+    };
+  };
+  contentDetails: {
+    duration: string;
+  };
+};
+
 
 
 const Playlists = () => {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [selectedPlaylistId, setSelectedPlaylistId] = useState<string | null>(null);
-  const [videos, setVideos] = useState<any[]>([]);  
+  const [videos, setVideos] = useState<Video[]>([]);  
 
   useEffect(() => {
     const fetchPlaylists = async () => {

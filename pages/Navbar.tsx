@@ -1,4 +1,4 @@
-import { Calendar, Play, Video, Eye, Menu, Search, Bell, User, Youtube } from 'lucide-react';
+import { Menu, Search, Bell, User, Youtube } from 'lucide-react';
 
 const Navbar = () => (
   <nav className="bg-white shadow-md fixed w-full top-0 z-50">
